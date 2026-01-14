@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint Poker - Planning Poker</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js" onerror="alert('SockJS yüklenemedi!')"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2/lib/stomp.min.js" onerror="alert('STOMP yüklenemedi!')"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="container">
+                <div class="welcome-card">
+                    <h1>🎯 Sprint Poker</h1>
+                    <p class="subtitle">Agile Planning Poker Oyunu</p>
+                    
+                    <div class="form-group">
+                        <input type="text" id="player-name" placeholder="İsminizi girin" maxlength="20">
+                    </div>
+                    
+                    <div class="button-group">
+                        <button id="create-room-btn" class="btn btn-primary">Oda Oluştur</button>
+                        <button id="join-room-btn" class="btn btn-secondary">Odaya Katıl</button>
+                    </div>
+                    
+                    <div id="join-form" class="join-form hidden">
+                        <input type="text" id="room-id-input" placeholder="Oda ID'sini girin">
+                        <button id="confirm-join-btn" class="btn btn-primary">Katıl</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="screen">
+            <div class="game-header">
+                <div class="room-info">
+                    <h2 id="room-name">Oda Adı</h2>
+                    <p class="room-id">Oda ID: <span id="room-id-display"></span></p>
+                </div>
+                <button id="leave-room-btn" class="btn btn-danger">Çıkış</button>
+            </div>
+
+            <div class="game-content">
+                <div class="left-panel">
+                    <div class="story-section">
+                        <h3>📋 User Story</h3>
+                        <div id="story-display" class="story-display">
+                            <p id="story-text">Henüz story girilmedi...</p>
+                        </div>
+                        <div id="story-input-section" class="story-input-section hidden">
+                            <textarea id="story-input" placeholder="User story'yi buraya yazın..."></textarea>
+                            <button id="set-story-btn" class="btn btn-primary">Story'yi Ayarla</button>
+                        </div>
+                    </div>
+
+                    <div class="players-section">
+                        <h3>👥 Oyuncular (<span id="player-count">0</span>)</h3>
+                        <div id="players-list" class="players-list"></div>
+                    </div>
+                </div>
+
+                <div class="right-panel">
+                    <div class="voting-section">
+                        <h3>🃏 Kartlarınızı Seçin</h3>
+                        <div id="cards-container" class="cards-container"></div>
+                        <div id="selected-card" class="selected-card hidden">
+                            <p>Seçtiğiniz kart: <span id="selected-card-value"></span></p>
+                        </div>
+                    </div>
+
+                    <div class="actions-section">
+                        <button id="reveal-btn" class="btn btn-success hidden">Sonuçları Göster</button>
+                        <button id="reset-btn" class="btn btn-warning hidden">Yeni Oylama</button>
+                    </div>
+
+                    <div id="results-section" class="results-section hidden">
+                        <h3>📊 Sonuçlar</h3>
+                        <div id="results-container" class="results-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/app.js}"></script>
+    <script>
+        // Fallback: Eğer app.js yüklenmezse
+        window.addEventListener('load', function() {
+            console.log('Sayfa yüklendi');
+            if (typeof createRoom === 'undefined') {
+                console.error('createRoom fonksiyonu tanımlı değil! JavaScript dosyası yüklenmemiş olabilir.');
+                alert('JavaScript dosyası yüklenemedi! Sayfayı yenileyin.');
+            }
+        });
+    </script>
+</body>
+</html>
