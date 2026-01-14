@@ -321,17 +321,33 @@ function renderPlayers(players) {
     const container = document.getElementById('players-list');
     container.innerHTML = '';
     
+    // Aynı isimdeki oyuncuları tespit et
+    const nameCounts = {};
+    players.forEach(p => {
+        nameCounts[p.name] = (nameCounts[p.name] || 0) + 1;
+    });
+    
     players.forEach(player => {
         const div = document.createElement('div');
         div.className = 'player-item';
+        
+        // Eğer aynı isimde birden fazla oyuncu varsa, ID'nin son 4 karakterini ekle
+        let displayName = player.name;
+        if (nameCounts[player.name] > 1) {
+            const shortId = player.id.substring(player.id.length - 4);
+            displayName = `${player.name} (${shortId})`;
+        }
         
         let hostBadge = player.host ? '<span class="host-badge">HOST</span>' : '';
         let status = player.hasVoted ? 
             '<span class="player-status voted">✓ Oyladı</span>' : 
             '<span class="player-status waiting">⏳ Bekliyor</span>';
         
+        // Eğer bu benim player'ım ise özel işaretle
+        let isMe = player.id === currentPlayerId ? ' (Siz)' : '';
+        
         div.innerHTML = `
-            <span class="player-name">${player.name}${hostBadge}</span>
+            <span class="player-name">${displayName}${isMe}${hostBadge}</span>
             ${status}
         `;
         container.appendChild(div);
@@ -361,6 +377,12 @@ function showResults(data) {
     const voteResults = data.voteResults || {};
     const players = data.players || [];
     
+    // Aynı isimdeki oyuncuları tespit et
+    const nameCounts = {};
+    players.forEach(p => {
+        nameCounts[p.name] = (nameCounts[p.name] || 0) + 1;
+    });
+    
     // Oy sayılarını göster
     let resultsHtml = '<div class="results-summary">';
     Object.entries(voteResults)
@@ -379,9 +401,16 @@ function showResults(data) {
     resultsHtml += '<div class="player-votes"><h4>Oyuncu Oyları:</h4>';
     players.forEach(player => {
         if (player.currentVote) {
+            // Eğer aynı isimde birden fazla oyuncu varsa, ID'nin son 4 karakterini ekle
+            let displayName = player.name;
+            if (nameCounts[player.name] > 1) {
+                const shortId = player.id.substring(player.id.length - 4);
+                displayName = `${player.name} (${shortId})`;
+            }
+            
             resultsHtml += `
                 <div class="player-vote-item">
-                    <span>${player.name}</span>
+                    <span>${displayName}</span>
                     <span style="font-weight:bold">${player.currentVote}</span>
                 </div>
             `;

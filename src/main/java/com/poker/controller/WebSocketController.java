@@ -51,20 +51,20 @@ public class WebSocketController {
     @MessageMapping("/room/join")
     public void joinRoom(Message message) {
         try {
-            GameRoom room = gameService.joinRoom(message.getRoomId(), message.getPlayerName());
-            Player player = room.getPlayers().values().stream()
-                    .filter(p -> p.getName().equals(message.getPlayerName()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (player != null) {
-                Message response = new Message();
-                response.setType(Message.MessageType.PLAYER_JOINED);
-                response.setRoomId(room.getId());
-                response.setPlayerId(player.getId());
-                response.setPlayerName(player.getName());
-                response.setData(buildRoomData(room));
-                messagingTemplate.convertAndSend("/topic/room/" + room.getId(), response);
+            // Eğer playerId gönderilmişse, o player'ı kullan
+            if (message.getPlayerId() != null) {
+                Player player = gameService.getPlayer(message.getPlayerId());
+                GameRoom room = gameService.getRoom(message.getRoomId());
+                
+                if (player != null && room != null) {
+                    Message response = new Message();
+                    response.setType(Message.MessageType.PLAYER_JOINED);
+                    response.setRoomId(room.getId());
+                    response.setPlayerId(player.getId());
+                    response.setPlayerName(player.getName());
+                    response.setData(buildRoomData(room));
+                    messagingTemplate.convertAndSend("/topic/room/" + room.getId(), response);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
