@@ -273,18 +273,31 @@ function updateRoomUI(data) {
     const room = data.room;
     let players = data.players;
     
+    // Players'ı array'e çevir
     if (players && !Array.isArray(players)) {
-        players = Array.from(players);
+        if (typeof players === 'object') {
+            // Object ise values'ları al
+            players = Object.values(players);
+        } else {
+            players = [];
+        }
     }
     
-    if (!room) return;
+    if (!room) {
+        console.error('Room data yok:', data);
+        return;
+    }
+    
+    console.log('Room güncelleniyor:', { room, playerCount: players.length, players });
     
     document.getElementById('room-name').textContent = room.name || 'Oda';
     document.getElementById('room-id-display').textContent = room.id || '';
     document.getElementById('player-count').textContent = players ? players.length : 0;
     
-    if (players) {
+    if (players && players.length > 0) {
         renderPlayers(players);
+    } else {
+        document.getElementById('players-list').innerHTML = '<p style="color: #94a3b8;">Henüz oyuncu yok</p>';
     }
     
     if (room.currentStory) {
@@ -321,20 +334,34 @@ function renderPlayers(players) {
     const container = document.getElementById('players-list');
     container.innerHTML = '';
     
+    if (!players || players.length === 0) {
+        container.innerHTML = '<p style="color: #94a3b8;">Henüz oyuncu yok</p>';
+        return;
+    }
+    
+    console.log('Oyuncular render ediliyor:', players);
+    
     // Aynı isimdeki oyuncuları tespit et
     const nameCounts = {};
     players.forEach(p => {
-        nameCounts[p.name] = (nameCounts[p.name] || 0) + 1;
+        if (p && p.name) {
+            nameCounts[p.name] = (nameCounts[p.name] || 0) + 1;
+        }
     });
     
     players.forEach(player => {
+        if (!player || !player.name) {
+            console.warn('Geçersiz player:', player);
+            return;
+        }
+        
         const div = document.createElement('div');
         div.className = 'player-item';
         
         // Eğer aynı isimde birden fazla oyuncu varsa, ID'nin son 4 karakterini ekle
         let displayName = player.name;
-        if (nameCounts[player.name] > 1) {
-            const shortId = player.id.substring(player.id.length - 4);
+        if (nameCounts[player.name] > 1 && player.id) {
+            const shortId = player.id.substring(Math.max(0, player.id.length - 4));
             displayName = `${player.name} (${shortId})`;
         }
         
@@ -344,7 +371,7 @@ function renderPlayers(players) {
             '<span class="player-status waiting">⏳ Bekliyor</span>';
         
         // Eğer bu benim player'ım ise özel işaretle
-        let isMe = player.id === currentPlayerId ? ' (Siz)' : '';
+        let isMe = player.id === currentPlayerId ? ' <strong style="color: #667eea;">(Siz)</strong>' : '';
         
         div.innerHTML = `
             <span class="player-name">${displayName}${isMe}${hostBadge}</span>

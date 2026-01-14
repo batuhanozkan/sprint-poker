@@ -172,7 +172,8 @@ public class WebSocketController {
     private Map<String, Object> buildRoomData(GameRoom room) {
         Map<String, Object> data = new HashMap<>();
         data.put("room", room);
-        data.put("players", room.getPlayers().values());
+        // Players'ı liste olarak gönder
+        data.put("players", new java.util.ArrayList<>(room.getPlayers().values()));
         data.put("voteResults", room.getVoteResults());
         data.put("allVoted", room.allPlayersVoted());
         return data;
