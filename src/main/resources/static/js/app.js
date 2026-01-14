@@ -449,6 +449,7 @@ function showResults(data) {
 }
 
 function resetUI() {
+    document.getElementById('average-section').classList.add('hidden');
     document.getElementById('results-section').classList.add('hidden');
     document.querySelectorAll('.card').forEach(card => card.classList.remove('selected'));
     document.getElementById('selected-card').classList.add('hidden');

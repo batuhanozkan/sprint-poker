@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sprint Poker - Planning Poker</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/average.css}">
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js" onerror="alert('SockJS yüklenemedi!')"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2/lib/stomp.min.js" onerror="alert('STOMP yüklenemedi!')"></script>
 </head>
@@ -77,8 +78,14 @@
                         <button id="reset-btn" class="btn btn-warning hidden">Yeni Oylama</button>
                     </div>
 
+                    <div id="average-section" class="average-section hidden">
+                        <h3>📊 Ortalama Puan</h3>
+                        <div class="average-value" id="average-value">-</div>
+                        <div class="average-details" id="average-details">-</div>
+                    </div>
+                    
                     <div id="results-section" class="results-section hidden">
-                        <h3>📊 Sonuçlar</h3>
+                        <h3>📋 Detaylı Sonuçlar</h3>
                         <div id="results-container" class="results-container"></div>
                     </div>
                 </div>

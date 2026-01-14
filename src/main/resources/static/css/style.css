@@ -5,23 +5,23 @@
 }
 
 :root {
-    --primary-color: #6366f1;
-    --primary-dark: #4f46e5;
-    --secondary-color: #8b5cf6;
-    --success-color: #10b981;
+    --primary-color: #059669;
+    --primary-dark: #047857;
+    --secondary-color: #10b981;
+    --success-color: #22c55e;
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
-    --bg-color: #0f172a;
-    --card-bg: #1e293b;
-    --text-color: #e2e8f0;
-    --text-muted: #94a3b8;
-    --border-color: #334155;
-    --hover-color: #475569;
+    --bg-color: #f0fdf4;
+    --card-bg: #ffffff;
+    --text-color: #064e3b;
+    --text-muted: #6b7280;
+    --border-color: #d1fae5;
+    --hover-color: #a7f3d0;
 }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 50%, #6ee7b7 100%);
     min-height: 100vh;
     color: var(--text-color);
     overflow-x: hidden;
@@ -58,7 +58,7 @@ body {
 .welcome-card h1 {
     font-size: 3rem;
     margin-bottom: 10px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -176,13 +176,14 @@ body {
 
 /* Game Screen */
 .game-header {
-    background: rgba(30, 41, 59, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     padding: 20px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 2px solid var(--border-color);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .room-info h2 {
@@ -212,11 +213,12 @@ body {
 
 /* Story Section */
 .story-section, .players-section, .voting-section, .results-section {
-    background: rgba(30, 41, 59, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border-radius: 15px;
     padding: 25px;
-    border: 1px solid var(--border-color);
+    border: 2px solid var(--border-color);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .story-section h3, .players-section h3, .voting-section h3, .results-section h3 {
@@ -339,7 +341,7 @@ body {
 
 .card.selected {
     border-color: var(--primary-color);
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
     color: white;
     transform: translateY(-5px) scale(1.1);
 }
