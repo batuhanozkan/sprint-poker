@@ -395,6 +395,49 @@ function renderCards() {
 }
 
 function showResults(data) {
+    const players = data.players || [];
+    
+    // Ortalama puanı hesapla
+    const numericVotes = [];
+    players.forEach(player => {
+        if (player.currentVote) {
+            const vote = player.currentVote;
+            if (vote !== '?' && vote !== '☕') {
+                const numValue = parseFloat(vote);
+                if (!isNaN(numValue)) {
+                    numericVotes.push(numValue);
+                }
+            }
+        }
+    });
+    
+    // Ortalama hesapla
+    let average = 0;
+    let averageText = '-';
+    let detailsText = '';
+    
+    if (numericVotes.length > 0) {
+        average = numericVotes.reduce((a, b) => a + b, 0) / numericVotes.length;
+        averageText = average.toFixed(1);
+        
+        const fibSequence = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89];
+        const closestFib = fibSequence.reduce((prev, curr) => 
+            Math.abs(curr - average) < Math.abs(prev - average) ? curr : prev
+        );
+        
+        detailsText = `${numericVotes.length} oyuncu oy verdi • En yakın Fibonacci: ${closestFib}`;
+    } else {
+        averageText = 'N/A';
+        detailsText = 'Sayısal oy yok';
+    }
+    
+    // Ortalamayı göster
+    const averageSection = document.getElementById('average-section');
+    averageSection.classList.remove('hidden');
+    document.getElementById('average-value').textContent = averageText;
+    document.getElementById('average-details').textContent = detailsText;
+    
+    // Detaylı sonuçları göster
     const resultsSection = document.getElementById('results-section');
     resultsSection.classList.remove('hidden');
     
@@ -402,7 +445,6 @@ function showResults(data) {
     container.innerHTML = '';
     
     const voteResults = data.voteResults || {};
-    const players = data.players || [];
     
     // Aynı isimdeki oyuncuları tespit et
     const nameCounts = {};
@@ -428,7 +470,6 @@ function showResults(data) {
     resultsHtml += '<div class="player-votes"><h4>Oyuncu Oyları:</h4>';
     players.forEach(player => {
         if (player.currentVote) {
-            // Eğer aynı isimde birden fazla oyuncu varsa, ID'nin son 4 karakterini ekle
             let displayName = player.name;
             if (nameCounts[player.name] > 1) {
                 const shortId = player.id.substring(player.id.length - 4);
